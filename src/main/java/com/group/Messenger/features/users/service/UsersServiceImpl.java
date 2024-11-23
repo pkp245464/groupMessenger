@@ -36,13 +36,19 @@ public class UsersServiceImpl implements UsersService{
 
     @Override
     public Optional<UsersDto> getUsersById(Long userId) {
-        Optional<Users>user = usersRepository.findById(userId);
+        Optional<Users>user = usersRepository.findByUserIdAndIsDeletedFalse(userId);
+        if (user.isEmpty()) {
+            throw new CustomGroupMessengerException("User does not exist by userId: " + userId);
+        }
         return user.map(this::convertToDto);
     }
 
     @Override
     public Optional<UsersDto> getUsersByUsername(String username) {
-        Optional<Users> user = usersRepository.findByUserName(username);
+        Optional<Users> user = usersRepository.findByUserNameAndIsDeletedFalse(username);
+        if (user.isEmpty()) {
+            throw new CustomGroupMessengerException("User does not exist by username: " + username);
+        }
         return user.map(this::convertToDto);
     }
 
