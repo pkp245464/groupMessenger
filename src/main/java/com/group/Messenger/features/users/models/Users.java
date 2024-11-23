@@ -1,8 +1,9 @@
-package com.group.Messenger.models;
+package com.group.Messenger.features.users.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -30,6 +31,13 @@ public class Users {
     @Column(name = "updated_At")
     private LocalDateTime updatedAt;
 
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
+
+    @Column(name = "address")
+    private String address;
+
     @Column(name = "is_deleted")
     private Boolean isDeleted = false;
+
 }
