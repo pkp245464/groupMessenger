@@ -75,7 +75,7 @@ public class UsersServiceImpl implements UsersService{
 
     @Override
     public void deleteUsersByUserName(String userName) {
-        Users user = usersRepository.findByUserName(userName)
+        Users user = usersRepository.findByUserNameAndIsDeletedFalse(userName)
                 .orElseThrow(()->new CustomGroupMessengerException("User not found with userName: " + userName));
 
         if(Boolean.TRUE.equals(user.getIsDeleted())) {
@@ -87,7 +87,7 @@ public class UsersServiceImpl implements UsersService{
 
     @Override
     public void deleteUsersByUserId(Long userId) {
-        Users user = usersRepository.findById(userId)
+        Users user = usersRepository.findByUserIdAndIsDeletedFalse(userId)
                 .orElseThrow(()->new CustomGroupMessengerException("User not found with userId: " + userId));
 
         if(Boolean.TRUE.equals(user.getIsDeleted())) {
