@@ -17,10 +17,16 @@ public class UsersController {
     @Autowired
     private UsersService usersService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<UsersDto> createUser(@RequestBody UsersDto usersDto) {
         UsersDto createUser = usersService.createUser(usersDto);
         return new ResponseEntity<>(createUser, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<UsersDto> updateUser(@RequestBody UsersDto usersDto) {
+        UsersDto updateUser = usersService.updateUser(usersDto);
+        return new ResponseEntity<>(updateUser, HttpStatus.OK);
     }
 
     @GetMapping("/id/{userId}")

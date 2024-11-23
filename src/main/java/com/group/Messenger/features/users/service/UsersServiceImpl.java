@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Service
 public class UsersServiceImpl implements UsersService{
@@ -53,23 +55,24 @@ public class UsersServiceImpl implements UsersService{
     }
 
     @Override
-    public UsersDto updateUser(Long userId, UsersDto userDto) {
-        Optional<Users> existingUserOptional = usersRepository.findById(userId);
-        if (existingUserOptional.isPresent()) {
-            Users existingUser = existingUserOptional.get();
-            existingUser.setUserName(userDto.getUserName());
-            existingUser.setFirstName(userDto.getFirstName());
-            existingUser.setSecondName(userDto.getSecondName());
-            existingUser.setDateOfBirth(userDto.getDateOfBirth());
-            existingUser.setAddress(userDto.getAddress());
-            existingUser.setUpdatedAt(LocalDateTime.now());
+    public UsersDto updateUser(UsersDto userDto) {
+        Long userId = userDto.getUserId();
+        Users existingUser = usersRepository.findById(userId)
+                .orElseThrow(() -> new CustomGroupMessengerException("User does not exist by userId: " + userId));
 
-            Users updatedUser = usersRepository.save(existingUser);
+        updateFieldIfNotNull(existingUser::setUserName, userDto.getUserName());
+        updateFieldIfNotNull(existingUser::setFirstName, userDto.getFirstName());
+        updateFieldIfNotNull(existingUser::setSecondName, userDto.getSecondName());
+        updateFieldIfNotNull(existingUser::setDateOfBirth, userDto.getDateOfBirth());
+        updateFieldIfNotNull(existingUser::setAddress, userDto.getAddress());
 
-            return convertToDto(updatedUser);
-        }
-        else {
-            throw new CustomGroupMessengerException("User does not exist by username: " + userId);
+        Users updatedUser = usersRepository.save(existingUser);
+        return convertToDto(updatedUser);
+    }
+
+    private <T> void updateFieldIfNotNull(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
         }
     }
 
