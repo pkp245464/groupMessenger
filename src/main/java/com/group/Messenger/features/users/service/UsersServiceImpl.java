@@ -1,5 +1,6 @@
 package com.group.Messenger.features.users.service;
 
+import com.group.Messenger.core.exceptions.CustomGroupMessengerException;
 import com.group.Messenger.features.users.dto.UsersDto;
 import com.group.Messenger.features.users.models.Users;
 import com.group.Messenger.features.users.repository.UsersRepository;
@@ -19,7 +20,7 @@ public class UsersServiceImpl implements UsersService{
     public UsersDto createUser(UsersDto usersDto) {
         Optional<Users> existingUser = usersRepository.findByUserName(usersDto.getUserName());
         if (existingUser.isPresent()) {
-            throw new RuntimeException("Username already exists");
+            throw new CustomGroupMessengerException("Username already exists");
         }
         Users user = new Users();
         user.setUserName(usersDto.getUserName());
@@ -62,17 +63,17 @@ public class UsersServiceImpl implements UsersService{
             return convertToDto(updatedUser);
         }
         else {
-            throw new RuntimeException("User does not exist by username: " + userId);
+            throw new CustomGroupMessengerException("User does not exist by username: " + userId);
         }
     }
 
     @Override
     public void deleteUsersByUserName(String userName) {
         Users user = usersRepository.findByUserName(userName)
-                .orElseThrow(()->new RuntimeException("User not found with userName: " + userName));
+                .orElseThrow(()->new CustomGroupMessengerException("User not found with userName: " + userName));
 
         if(Boolean.TRUE.equals(user.getIsDeleted())) {
-            throw new IllegalStateException("User is already deleted with userName: " + userName);
+            throw new CustomGroupMessengerException("User is already deleted with userName: " + userName);
         }
         user.setIsDeleted(true);
         usersRepository.save(user);
@@ -81,10 +82,10 @@ public class UsersServiceImpl implements UsersService{
     @Override
     public void deleteUsersByUserId(Long userId) {
         Users user = usersRepository.findById(userId)
-                .orElseThrow(()->new RuntimeException("User not found with userId: " + userId));
+                .orElseThrow(()->new CustomGroupMessengerException("User not found with userId: " + userId));
 
         if(Boolean.TRUE.equals(user.getIsDeleted())) {
-            throw new IllegalStateException("User is already deleted with userId: " + userId);
+            throw new CustomGroupMessengerException("User is already deleted with userId: " + userId);
         }
         user.setIsDeleted(true);
         usersRepository.save(user);
