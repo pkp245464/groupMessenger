@@ -8,12 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Service
 public class GroupsServiceImpl implements GroupsService {
 
     @Autowired
     private GroupsRepository groupsRepository;
+
+    //TODO add bloom filter for checking groups
 
     @Override
     public GroupsDto createGroup(GroupsDto groupsDto) {
@@ -48,8 +51,17 @@ public class GroupsServiceImpl implements GroupsService {
     }
 
     @Override
-    public GroupsDto updateGroups(Long groupId) {
-        return null;
+    public GroupsDto updateGroups(GroupsDto groupsDto) {
+        Long groupId = groupsDto.getGroupId();
+        Groups existingGroup = groupsRepository.findByGroupIdAndIsDeletedFalse(groupId)
+                .orElseThrow(()->new CustomGroupMessengerException("Group not found with groupId: " + groupId));
+
+        updateFieldIfNotNull(existingGroup::setGroupName,groupsDto.getGroupName());
+        updateFieldIfNotNull(existingGroup::setGroupDescription,groupsDto.getGroupDescription());
+        updateFieldIfNotNull(existingGroup::setIsDeleted,groupsDto.getIsDeleted());
+
+        Groups updatedGroups = groupsRepository.save(existingGroup);
+        return convertToDto(updatedGroups);
     }
 
     @Override
@@ -66,6 +78,12 @@ public class GroupsServiceImpl implements GroupsService {
                 .orElseThrow(()->new CustomGroupMessengerException("Group not found with groupId: " + groupName));
         group.setIsDeleted(true);
         groupsRepository.save(group);
+    }
+
+    private <T> void updateFieldIfNotNull(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 
     private GroupsDto convertToDto(Groups group) {

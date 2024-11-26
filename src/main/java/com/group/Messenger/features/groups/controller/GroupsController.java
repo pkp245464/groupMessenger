@@ -38,6 +38,12 @@ public class GroupsController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<GroupsDto> updateGroups(@RequestBody GroupsDto groupsDto) {
+        GroupsDto updateGroups = groupsService.updateGroups(groupsDto);
+        return new ResponseEntity<>(updateGroups,HttpStatus.OK);
+    }
+
     @DeleteMapping("/id/{groupId}")
     public ResponseEntity<String> deleteGroupByGroupId(@PathVariable Long groupId) {
         try {

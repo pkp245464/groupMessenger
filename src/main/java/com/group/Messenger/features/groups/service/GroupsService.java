@@ -9,7 +9,7 @@ public interface GroupsService {
     GroupsDto createGroup(GroupsDto groupsDto);
     Optional<GroupsDto> getGroupByGroupId(Long groupId);
     Optional<GroupsDto> getGroupByGroupName(String groupName);
-    GroupsDto updateGroups(Long groupId);
+    GroupsDto updateGroups(GroupsDto groupsDto);
     void deleteGroupsByGroupId(Long groupId);
     void deleteGroupsByGroupName(String groupName);
 
