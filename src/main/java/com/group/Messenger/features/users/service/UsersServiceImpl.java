@@ -18,11 +18,13 @@ public class UsersServiceImpl implements UsersService{
     @Autowired
     private UsersRepository usersRepository;
 
+    //TODO: implement using bloom filter
     @Override
     public UsersDto createUser(UsersDto usersDto) {
-        Optional<Users> existingUser = usersRepository.findByUserName(usersDto.getUserName());
+        String currentUserName = usersDto.getUserName();
+        Optional<Users> existingUser = usersRepository.findByUserName(currentUserName);
         if (existingUser.isPresent()) {
-            throw new CustomGroupMessengerException("Username already exists");
+            throw new CustomGroupMessengerException("Username already exists: " + currentUserName);
         }
         Users user = new Users();
         user.setUserName(usersDto.getUserName());
@@ -80,10 +82,6 @@ public class UsersServiceImpl implements UsersService{
     public void deleteUsersByUserName(String userName) {
         Users user = usersRepository.findByUserNameAndIsDeletedFalse(userName)
                 .orElseThrow(()->new CustomGroupMessengerException("User not found with userName: " + userName));
-
-        if(Boolean.TRUE.equals(user.getIsDeleted())) {
-            throw new CustomGroupMessengerException("User is already deleted with userName: " + userName);
-        }
         user.setIsDeleted(true);
         usersRepository.save(user);
     }
@@ -92,10 +90,6 @@ public class UsersServiceImpl implements UsersService{
     public void deleteUsersByUserId(Long userId) {
         Users user = usersRepository.findByUserIdAndIsDeletedFalse(userId)
                 .orElseThrow(()->new CustomGroupMessengerException("User not found with userId: " + userId));
-
-        if(Boolean.TRUE.equals(user.getIsDeleted())) {
-            throw new CustomGroupMessengerException("User is already deleted with userId: " + userId);
-        }
         user.setIsDeleted(true);
         usersRepository.save(user);
     }

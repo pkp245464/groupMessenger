@@ -1,5 +1,6 @@
 package com.group.Messenger.features.groups.models;
 
+import com.group.Messenger.features.groupsMembers.models.GroupsMembers;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,16 +17,16 @@ public class Groups {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groupId; //groupId must be unique
 
-    @Column(name = "group_name" ,insertable = true)
+    @Column(name = "group_name")
     private String groupName; //groupName must be unique
 
-    @Column(name = "group_description", insertable = false)
+    @Column(name = "group_description")
     private String groupDescription;
 
     @Column(name = "created_At", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "is_deleted", insertable = false)
+    @Column(name = "is_deleted")
     private Boolean isDeleted = false;
 
     @OneToMany(mappedBy = "groups")

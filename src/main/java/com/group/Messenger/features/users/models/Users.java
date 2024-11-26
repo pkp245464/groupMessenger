@@ -1,6 +1,6 @@
 package com.group.Messenger.features.users.models;
 
-import com.group.Messenger.features.groups.models.GroupsMembers;
+import com.group.Messenger.features.groupsMembers.models.GroupsMembers;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,13 +18,13 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId; //userId must be unique
 
-    @Column(name = "username", insertable = true)
+    @Column(name = "username")
     private String userName; //userName must be unique
 
-    @Column(name = "first_name", insertable = true)
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "second_name", insertable = false)
+    @Column(name = "second_name")
     private String secondName;
 
     @Column(name = "create_At", insertable = false, updatable = false)
@@ -33,10 +33,10 @@ public class Users {
     @Column(name = "updated_At", insertable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name = "date_of_birth", insertable = false)
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @Column(name = "address", insertable = true)
+    @Column(name = "address")
     private String address;
 
     @Column(name = "is_deleted")

@@ -47,10 +47,10 @@ public class UsersController {
     public ResponseEntity<String> deleteUserByUserId(@PathVariable Long userId) {
         try {
             usersService.deleteUsersByUserId(userId);
-            return new ResponseEntity<>("User deleted successfully", HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>("User deleted successfully: " + userId, HttpStatus.NO_CONTENT);
         }
-        catch (CustomGroupMessengerException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        catch (CustomGroupMessengerException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -58,10 +58,10 @@ public class UsersController {
     public ResponseEntity<String> deleteUserByUsername(@PathVariable String username) {
         try {
             usersService.deleteUsersByUserName(username);
-            return new ResponseEntity<>("User deleted successfully", HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>("User deleted successfully: " + username, HttpStatus.NO_CONTENT);
         }
-        catch (CustomGroupMessengerException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        catch (CustomGroupMessengerException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }
