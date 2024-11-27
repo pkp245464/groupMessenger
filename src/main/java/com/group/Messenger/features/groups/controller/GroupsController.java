@@ -1,6 +1,8 @@
 package com.group.Messenger.features.groups.controller;
 
+import com.group.Messenger.core.enums.GroupEnum;
 import com.group.Messenger.core.exceptions.CustomGroupMessengerException;
+import com.group.Messenger.features.groups.dto.AddUserToGroupDto;
 import com.group.Messenger.features.groups.dto.GroupsDto;
 import com.group.Messenger.features.groups.service.GroupsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +66,17 @@ public class GroupsController {
         }
         catch (CustomGroupMessengerException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/add-user")
+    public ResponseEntity<String> addUserToGroup(@RequestBody AddUserToGroupDto addUserToGroupDto) {
+        try {
+            groupsService.addUserToGroup(addUserToGroupDto.getUserId(), addUserToGroupDto.getGroupId(), addUserToGroupDto.getGroupRole());
+            return new ResponseEntity<>("User added to the group successfully", HttpStatus.OK);
+        }
+        catch (CustomGroupMessengerException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

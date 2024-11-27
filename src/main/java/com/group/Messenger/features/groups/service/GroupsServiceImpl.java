@@ -102,6 +102,26 @@ public class GroupsServiceImpl implements GroupsService {
         groupsRepository.save(group);
     }
 
+    @Override
+    public void addUserToGroup(Long userId, Long groupId, GroupEnum groupRole) {
+        Groups groups = groupsRepository.findByGroupIdAndIsDeletedFalse(groupId)
+                .orElseThrow(() -> new CustomGroupMessengerException("Group not found with groupId: " + groupId));
+        Users users = usersRepository.findByUserIdAndIsDeletedFalse(userId)
+                .orElseThrow(() -> new CustomGroupMessengerException("User not found with userId: " + userId));
+
+        Optional<GroupsMembers> existingMember = groupsMembersRepository.findByUserIdAndGroupId(userId,groupId);
+        if(existingMember.isPresent()) {
+            throw new CustomGroupMessengerException("User is already a member of the group");
+        }
+
+        GroupsMembers groupsMembers = new GroupsMembers();
+        groupsMembers.setUsers(users);
+        groupsMembers.setGroups(groups);
+        groupsMembers.setGroupRole(groupRole);
+        
+        groupsMembersRepository.save(groupsMembers);
+    }
+
     private <T> void updateFieldIfNotNull(Consumer<T> setter, T value) {
         if (value != null) {
             setter.accept(value);
