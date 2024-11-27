@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface GroupsService {
 
-    GroupsDto createGroup(GroupsDto groupsDto);
+    GroupsDto createGroup(GroupsDto groupsDto, Long creatorUserId);
     Optional<GroupsDto> getGroupByGroupId(Long groupId);
     Optional<GroupsDto> getGroupByGroupName(String groupName);
     GroupsDto updateGroups(GroupsDto groupsDto);

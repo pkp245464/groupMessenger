@@ -1,9 +1,14 @@
 package com.group.Messenger.features.groups.service;
 
+import com.group.Messenger.core.enums.GroupEnum;
 import com.group.Messenger.core.exceptions.CustomGroupMessengerException;
 import com.group.Messenger.features.groups.dto.GroupsDto;
 import com.group.Messenger.features.groups.models.Groups;
+import com.group.Messenger.features.groups.models.GroupsMembers;
+import com.group.Messenger.features.groups.repository.GroupsMembersRepository;
 import com.group.Messenger.features.groups.repository.GroupsRepository;
+import com.group.Messenger.features.users.models.Users;
+import com.group.Messenger.features.users.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +21,16 @@ public class GroupsServiceImpl implements GroupsService {
     @Autowired
     private GroupsRepository groupsRepository;
 
+    @Autowired
+    private UsersRepository usersRepository;
+
+    @Autowired
+    private GroupsMembersRepository groupsMembersRepository;
+
     //TODO add bloom filter for checking groups
 
     @Override
-    public GroupsDto createGroup(GroupsDto groupsDto) {
+    public GroupsDto createGroup(GroupsDto groupsDto, Long creatorUserId) {
         String currentGroupName = groupsDto.getGroupName();
         Optional<Groups> existingGroup = groupsRepository.findByGroupName(currentGroupName);
         if(existingGroup.isPresent()) {
@@ -29,6 +40,17 @@ public class GroupsServiceImpl implements GroupsService {
         group.setGroupName(groupsDto.getGroupName());
         group.setGroupDescription(groupsDto.getGroupDescription());
         Groups savedGroup = groupsRepository.save(group);
+
+        Users creator = usersRepository.findByUserIdAndIsDeletedFalse(creatorUserId)
+                .orElseThrow(()->new CustomGroupMessengerException("User not found with userId: " + creatorUserId));
+
+        GroupsMembers groupsMembers = new GroupsMembers();
+        groupsMembers.setUsers(creator);
+        groupsMembers.setGroups(savedGroup);
+        groupsMembers.setGroupRole(GroupEnum.admin);
+
+        groupsMembersRepository.save(groupsMembers);
+
         return convertToDto(savedGroup);
     }
 

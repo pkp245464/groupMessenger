@@ -28,4 +28,7 @@ public class GroupsDto {
 
     @JsonProperty("groupMembersId")
     private List<Long> groupMembersId;
+
+    @JsonProperty("createdUserId")
+    private Long creatorUserId;
 }

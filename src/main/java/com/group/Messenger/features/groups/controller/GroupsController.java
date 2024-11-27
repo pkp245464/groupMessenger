@@ -20,7 +20,8 @@ public class GroupsController {
 
     @PostMapping("/create")
     public ResponseEntity<GroupsDto> createGroup(@RequestBody GroupsDto groupsDto) {
-        GroupsDto createGroup = groupsService.createGroup(groupsDto);
+        Long creatorUserId = groupsDto.getCreatorUserId();
+        GroupsDto createGroup = groupsService.createGroup(groupsDto,creatorUserId);
         return new ResponseEntity<>(createGroup, HttpStatus.CREATED);
     }
 
