@@ -1,6 +1,5 @@
 package com.group.Messenger.features.groups.models;
 
-import com.group.Messenger.features.groupsMembers.models.GroupsMembers;
 import jakarta.persistence.*;
 import lombok.Data;
 
