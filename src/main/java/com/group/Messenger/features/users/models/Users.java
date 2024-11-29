@@ -1,5 +1,6 @@
 package com.group.Messenger.features.users.models;
 
+import com.group.Messenger.core.enums.LoginProviders;
 import com.group.Messenger.features.groups.models.GroupsMembers;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -21,6 +22,12 @@ public class Users {
     @Column(name = "username")
     private String userName; //userName must be unique
 
+    @Column(name = "email",unique = true)
+    private String email;
+
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "first_name")
     private String firstName;
 
@@ -41,6 +48,10 @@ public class Users {
 
     @Column(name = "is_deleted")
     private Boolean isDeleted = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "provider_type")
+    private LoginProviders provideType;
 
     @OneToMany(mappedBy = "users")
     private List<GroupsMembers> groupsMembers;
