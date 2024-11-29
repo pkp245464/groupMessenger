@@ -56,11 +56,11 @@ public class UsersServiceImpl implements UsersService{
     public String loginUser(String username, String password) {
         Optional<Users>loginUser = usersRepository.findByUserName(username);
         if(loginUser.isEmpty()) {
-            throw new CustomGroupMessengerException("Invalid username: " + username);
+            throw new CustomGroupMessengerException("Username not recognized. Please verify your username and try again.");
         }
         Users user = loginUser.get();
         if(!passwordEncoder.matches(password,user.getPassword())) {
-            throw new CustomGroupMessengerException("Invalid password, please try again");
+            throw new CustomGroupMessengerException("The password you entered is incorrect. Please check and try again.");
         }
 
         return jwtHelper.generateToken(new org.springframework.security.core.userdetails.User( user.getUserName(), user.getPassword(), new ArrayList<>()));
