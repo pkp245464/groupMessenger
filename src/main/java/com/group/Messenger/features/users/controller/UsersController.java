@@ -1,6 +1,8 @@
 package com.group.Messenger.features.users.controller;
 
 import com.group.Messenger.core.exceptions.CustomGroupMessengerException;
+import com.group.Messenger.features.users.dto.LoginRequest;
+import com.group.Messenger.features.users.dto.UserDetailsDto;
 import com.group.Messenger.features.users.dto.UsersDto;
 import com.group.Messenger.features.users.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,16 @@ public class UsersController {
     @Autowired
     private UsersService usersService;
 
-    @PostMapping("/create")
-    public ResponseEntity<UsersDto> createUser(@RequestBody UsersDto usersDto) {
-        UsersDto createUser = usersService.createUser(usersDto);
+    @PostMapping("/signup")
+    public ResponseEntity<UserDetailsDto> createUser(@RequestBody UserDetailsDto userDetailsDto) {
+        UserDetailsDto createUser = usersService.createUser(userDetailsDto);
         return new ResponseEntity<>(createUser, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+        String token = usersService.loginUser(loginRequest.getUsername(),loginRequest.getPassword());
+        return new ResponseEntity<>(token,HttpStatus.OK);
     }
 
     @PutMapping("/update")
