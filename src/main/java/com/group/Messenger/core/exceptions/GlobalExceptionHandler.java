@@ -18,11 +18,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CustomGroupMessengerException.class)
-    public ResponseEntity<ErrorInfo> handleCustomGroupMessengerException(CustomGroupMessengerException customInnowellException) {
+    public ResponseEntity<ErrorInfo> handleCustomGroupMessengerException(CustomGroupMessengerException customGroupMessengerException) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorInfo(
                 null,
                 "CustomGroupMessengerException",
-                customInnowellException.getMessage(),
+                customGroupMessengerException.getMessage(),
                 new Date()
         ));
     }
