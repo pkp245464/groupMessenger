@@ -28,6 +28,7 @@ public class SecurityConfig {
         httpSecurity.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/group-messenger/swagger-ui.html", "/group-messenger/v3/api-docs/**", "/group-messenger/swagger-ui/**", "/group-messenger/webjars/swagger-ui/**", "/group-messenger/api-docs/**").permitAll()
                         .requestMatchers("/group-messenger/users/signup", "/group-messenger/users/login").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
